@@ -11,5 +11,7 @@ const hostname = '0.0.0.0';
 const port = (_a = process.env.NODE_PORT) !== null && _a !== void 0 ? _a : 80;
 app.listen(port);
 console.log(`Server start hostname ${hostname}:${port}`);
-console.log('Hello console');
-app.use(router_1.default);
+app.get('/', (req, res) => {
+    res.send('<h1>Welcome to the Luni Exercice API</h1>');
+});
+app.use('/api/v1', router_1.default);
