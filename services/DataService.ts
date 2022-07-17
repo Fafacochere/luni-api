@@ -2,8 +2,6 @@ import {mysqlManager} from "../utils/mysqlManager";
 import {Category, dataCategory} from "../interfaces/Category";
 import {dataProgram, Program} from "../interfaces/Program";
 import {allDataExercice, Exercice} from "../interfaces/Exercice";
-import {json} from "express";
-
 
 class DataService {
 

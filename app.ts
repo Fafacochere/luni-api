@@ -14,4 +14,8 @@ app.get('/', (req, res) => {
     res.send('<h1>Welcome to the Luni Exercice API</h1>')
 });
 
-app.use('/api/v1', router);
+try {
+    app.use('/api/v1', router);
+} catch (e) {
+    console.error(e.code + ' error : ' + e.message)
+}
