@@ -1,9 +1,10 @@
 import{ Router, Request, Response } from 'express';
 import { dataService } from "../services/DataService";
+import auth from "../middlewares/auth";
 
 const dataRouter = Router();
 
-dataRouter.get('/', (req: Request, res: Response) => {
+dataRouter.get('/', auth, (req: Request, res: Response) => {
     try {
         dataService.getAllData().then((results: any) => {
             res.send({
