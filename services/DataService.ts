@@ -1,6 +1,6 @@
 import {mysqlManager} from "../utils/mysqlManager";
-import { Category } from "../interfaces/Category";
-import {Program} from "../interfaces/Program";
+import {Category, dataCategory} from "../interfaces/Category";
+import {dataProgram, Program} from "../interfaces/Program";
 import {allDataExercice, Exercice} from "../interfaces/Exercice";
 import {json} from "express";
 
@@ -49,31 +49,12 @@ class DataService {
             const jsonData: any = {};
             allData.forEach((item) => {
                 if (!jsonData[item.category_name]) {
-                    jsonData[item.category_name] = {
-                        id: item.category_id,
-                        name: item.category_name,
-                        programs: [{
-                            id: item.program_id,
-                            name: item.program_name,
-                            exercices: [{
-                                id: item.exercice_id,
-                                name: item.exercice_name,
-                                repetitions: item.exercice_repetitions,
-                            }]
-                        }]
-                    }
-                } else {
+                    jsonData[item.category_name] = this.createDataCategory(item);
+                }
+                 else {
                     const program = jsonData[item.category_name].programs.filter((program: any) => program.id === item.program_id);
                     if(program.length === 0) {
-                        jsonData[item.category_name].programs.push({
-                            id: item.program_id,
-                            name: item.program_name,
-                            exercices: [{
-                                id: item.exercice_id,
-                                name: item.exercice_name,
-                                repetitions: item.exercice_repetitions
-                            }]
-                        })
+                        jsonData[item.category_name].programs.push(this.createNewProgram(item))
                     } else {
                         const indexProgram = jsonData[item.category_name].programs.indexOf(program[0]);
                         jsonData[item.category_name].programs[indexProgram].exercices.push({
@@ -86,6 +67,27 @@ class DataService {
             })
             return Object.values(jsonData);
         })
+    }
+
+    private createDataCategory = (exerciceInfo: allDataExercice): dataCategory => {
+         const data: dataCategory = {
+             id: exerciceInfo.category_id,
+             name: exerciceInfo.category_name,
+             programs: [this.createNewProgram(exerciceInfo)]
+        };
+         return data;
+    }
+
+    private createNewProgram = (exerciceInfo: allDataExercice): dataProgram => {
+        return  {
+            id: exerciceInfo.program_id,
+            name: exerciceInfo.program_name,
+            exercices: [{
+                id: exerciceInfo.exercice_id,
+                name: exerciceInfo.exercice_name,
+                repetitions: exerciceInfo.exercice_repetitions
+            }],
+        };
     }
 }
 
