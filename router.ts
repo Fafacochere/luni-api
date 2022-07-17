@@ -1,6 +1,6 @@
 import{ Router, Request, Response } from 'express';
-import UserService from './services/UserService';
-import DataService from './services/DataService';
+import UserRouter from './controllers/UserController';
+import DataRouter from './controllers/DataController';
 
 const router = Router();
 
@@ -8,7 +8,7 @@ router.get('/', (req: Request, res: Response) => {
     res.send({'message': 'Hello World !'});
 })
 
-router.use('/user', UserService)
-router.use('/data', DataService)
+router.use('/user', UserRouter)
+router.use('/data', DataRouter)
 
 export default router;
