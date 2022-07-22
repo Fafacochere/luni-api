@@ -43,6 +43,7 @@ class DataService {
             ;
         `;
         return mysqlManager.rawQuery(query).then((results: any) => {
+            console.log(results)
             const allData = results[0] as allDataExercice[];
             const jsonData: any = {};
             allData.forEach((item) => {

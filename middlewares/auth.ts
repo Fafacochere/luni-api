@@ -14,6 +14,7 @@ export default async (req: Request, res: Response, next: any) => {
         } else {
             res.status(401).send({ "message": "Invalid token, please consider refresh it"});
         }
+        return;
     }
     const identifier = headers.idfv as string;
     const userExists = await userService.checkUserExists(identifier);

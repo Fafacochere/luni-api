@@ -4,7 +4,8 @@ import {ResultSetHeader} from "mysql2";
 
 class UserService {
     getUserByToken = async (token: string): Promise<UserData> => {
-        const query = `SELECT user_id as id, token FROM users_token WHERE token = '${token}'`;
+        const now = Math.floor(Date.now() / 1000);
+        const query = `SELECT user_id as id, token FROM users_token WHERE token = '${token}' AND expires_at > ${now}`;
         return await mysqlManager.rawQuery(query).then((results: any) => {
             const data = results[0];
             if ( data.length === 1) {
@@ -31,17 +32,22 @@ class UserService {
     }
 
     updateToken = async (userId: number, idfv: string) => {
+        const now = Math.floor(Date.now() / 1000);
+        await mysqlManager.rawQuery(`UPDATE users_token SET expires_at = ${now} WHERE expires_at > ${now} AND user_id = ${userId}`);
+
         const token = this.encryptIdfv(idfv);
-        return await mysqlManager.insert('users_token', { user_id: userId, token }).then(() => {
+        const expires  = Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60);
+        return await mysqlManager.insert('users_token', { user_id: userId, token, expires_at: expires }).then(() => {
             return {
                 id: userId,
                 token
             }
-        })
+        });
     }
 
     private encryptIdfv = (id: string): string => {
-        let buff = Buffer.from(id);
+        const key = id + Date.now().toString();
+        let buff = Buffer.from(key);
         return buff.toString('base64');
     }
 }
