@@ -2,8 +2,6 @@ import {mysqlManager} from "../utils/mysqlManager";
 import {Category, dataCategory} from "../interfaces/Category";
 import {dataProgram, Program} from "../interfaces/Program";
 import {allDataExercice, Exercice} from "../interfaces/Exercice";
-import {json} from "express";
-
 
 class DataService {
 
@@ -45,6 +43,7 @@ class DataService {
             ;
         `;
         return mysqlManager.rawQuery(query).then((results: any) => {
+            console.log(results)
             const allData = results[0] as allDataExercice[];
             const jsonData: any = {};
             allData.forEach((item) => {

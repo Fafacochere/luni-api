@@ -1,21 +1,22 @@
 import{ Router, Request, Response } from 'express';
 import { dataService } from "../services/DataService";
-import {Category} from "../interfaces/Category";
+import auth from "../middlewares/auth";
 
 const dataRouter = Router();
 
-dataRouter.get('/', (req: Request, res: Response) => {
-    dataService.getAllData().then((results: any) => {
-        res.send({
-            user: {
-                id: 1,
-                token: 'ABCDEFGHIJ'
-            },
-            data: {
-                programs: results
-            }
-        });
-    })
+dataRouter.get('/', auth, (req: Request, res: Response) => {
+    try {
+        dataService.getAllData().then((results: any) => {
+            res.send({
+                user: res.locals.userInfo,
+                data: {
+                    programs: results
+                }
+            });
+        })
+    } catch (error) {
+        console.error(error.message)
+    }
 })
 
 export default dataRouter;

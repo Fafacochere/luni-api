@@ -8,6 +8,7 @@ router.get('/', (req: Request, res: Response) => {
     res.send({'message': 'Hello World !'});
 })
 
+
 router.use('/user', UserRouter)
 router.use('/data', DataRouter)
 
