@@ -25,7 +25,7 @@ class DataService {
         return await mysqlManager.rawQuery(query).then((values: {0: Exercice[]}) => values[0])
     }
 
-    getAllData = async () => {
+    getAllData = async (): Promise<dataProgram[]> => {
         const query = `
             SELECT 
                 c.id as category_id,
@@ -43,7 +43,6 @@ class DataService {
             ;
         `;
         return mysqlManager.rawQuery(query).then((results: any) => {
-            console.log(results)
             const allData = results[0] as allDataExercice[];
             const jsonData: any = {};
             allData.forEach((item) => {
@@ -60,7 +59,7 @@ class DataService {
                             id: item.exercice_id,
                             name: item.exercice_name,
                             repetitions: item.exercice_repetitions,
-                        })
+                        });
                     }
                 }
             })

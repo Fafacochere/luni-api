@@ -1,21 +1,37 @@
 import{ Router, Request, Response } from 'express';
 import { dataService } from "../services/DataService";
 import auth from "../middlewares/auth";
+import {redisManager} from "../utils/redisManager";
+import {dataCategory} from "../interfaces/Category";
 
 const dataRouter = Router();
 
 dataRouter.get('/', auth, (req: Request, res: Response) => {
     try {
-        dataService.getAllData().then((results: any) => {
-            res.send({
-                user: res.locals.userInfo,
-                data: {
-                    programs: results
-                }
-            });
-        })
+        const cacheKey = 'dataCache';
+        redisManager.getKey(cacheKey).then((value) => {
+            if (!!value) {
+                res.send({
+                    user: res.locals.userInfo,
+                    data: {
+                        programs: JSON.parse(value)
+                    }
+                });
+                return;
+            } else {
+                dataService.getAllData().then((results: any) => {
+                    redisManager.setKey(cacheKey, JSON.stringify(results))
+                    res.send({
+                        user: res.locals.userInfo,
+                        data: {
+                            programs: results
+                        }
+                    });
+                });
+            }
+        });
     } catch (error) {
-        console.error(error.message)
+        res.status(500).send({ 'message': error.message});
     }
 })
 
