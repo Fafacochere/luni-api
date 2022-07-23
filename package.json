@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node .",
     "dev": "npm install && ( tsc -w & ) && nodemon",
-    "deploy":  "npm install && tsc && node .",
+    "deploy":  "tsc && node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

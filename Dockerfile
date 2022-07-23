@@ -7,5 +7,4 @@ COPY . ./
 RUN npm install
 
 RUN chown -R node.node /usr/luni/api/node_modules
-
-CMD ["npm", "run", 'deploy']
+RUN chown -R node.node /usr/luni/api/dist
