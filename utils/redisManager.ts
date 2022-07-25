@@ -17,7 +17,7 @@ class RedisManager {
         this.redisSession.set(name, value, {
             EX: ttl ?? this.defaultTtl,
         });
-    }
+    };
 
     getKey(name: string) {
         return this.redisSession.get(name);
